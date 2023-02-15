@@ -205,7 +205,7 @@ class Palette:
 
 class DataClient:
 
-    def __init__(self, host='127.0.0.1', port=8080):
+    def __init__(self, host='cbmonitor.sc.couchbase.com', port=8080):
         self.session = requests.Session()
         self.base_url = 'http://{}:{}/{{db}}/{{metric}}'.format(host, port)
 
