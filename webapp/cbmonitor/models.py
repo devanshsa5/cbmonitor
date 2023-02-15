@@ -3,6 +3,7 @@ from django.db import models
 
 class Cluster(models.Model):
 
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64, primary_key=True, blank=False)
 
     def __str__(self):
@@ -11,6 +12,7 @@ class Cluster(models.Model):
 
 class Server(models.Model):
 
+    id = models.AutoField(primary_key=True)
     class Meta:
         unique_together = ["address", "cluster"]
 
@@ -35,6 +37,7 @@ class Bucket(models.Model):
 
 class Index(models.Model):
 
+    id = models.AutoField(primary_key=True)
     class Meta:
         unique_together = ["name", "cluster"]
 
@@ -47,6 +50,7 @@ class Index(models.Model):
 
 class Observable(models.Model):
 
+    id = models.AutoField(primary_key=True)
     class Meta:
         unique_together = ["name", "cluster", "server", "bucket", "index"]
 
@@ -63,6 +67,7 @@ class Observable(models.Model):
 
 class Snapshot(models.Model):
 
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=256, primary_key=True, blank=False)
     ts_from = models.DateTimeField(blank=True, null=True)
     ts_to = models.DateTimeField(blank=True, null=True)
