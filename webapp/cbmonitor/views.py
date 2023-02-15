@@ -61,13 +61,13 @@ def validation(method):
     def wrapper(*args, **kargs):
         try:
             response = method(*args, **kargs)
-        except Http404, error:
+        except Http404 as error:
             logger.warn(error)
             return HttpResponse(content=error, status=404)
-        except ValidationError, error:
+        except ValidationError as error:
             logger.warn(error)
             return HttpResponse(content=error, status=400)
-        except IntegrityError, error:
+        except IntegrityError as error:
             logger.warn(error)
             return HttpResponse(content=error, status=400)
         else:
