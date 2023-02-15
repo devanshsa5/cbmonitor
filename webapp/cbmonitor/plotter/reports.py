@@ -1,6 +1,6 @@
 from collections import OrderedDict, defaultdict, namedtuple
 
-from cbmonitor import models
+from webapp.cbmonitor import models
 
 
 Observable = namedtuple(

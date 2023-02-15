@@ -11,8 +11,8 @@ import pandas as pd
 import requests
 from django.conf import settings
 
-from cbmonitor.plotter import constants
-from cbmonitor.plotter.reports import Report
+from webapp.cbmonitor.plotter import constants
+from webapp.cbmonitor.plotter.reports import Report
 
 matplotlib.rcParams.update({
     'axes.formatter.limits': (-6, 6),

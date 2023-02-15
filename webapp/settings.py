@@ -2,11 +2,30 @@
 from os import path
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+# TEMPLATE_DEBUG = DEBUG
+SETTINGS_PATH = path.dirname(path.dirname(__file__))
 
-ALLOWED_HOSTS = ("cbmonitor.sc.couchbase.com", "127.0.0.1", "172.23.98.70")
+ALLOWED_HOSTS = ("cbmonitor.sc.couchbase.com", "127.0.0.1", "172.23.98.70", "172.23.105.37")
 
 INTERNAL_IPS = ("127.0.0.1",)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [path.join(SETTINGS_PATH, 'templates')],
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            'debug': DEBUG,
+            'loaders': [
+                "django.template.loaders.app_directories.Loader",
+            ],
+        },
+    },
+]
 
 DATABASES = {
     "default": {
@@ -22,10 +41,7 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
         "LOCATION": "127.0.0.1:11411",
-        "TIMEOUT": None,
-        "OPTIONS": {
-            "MAX_ENTRIES": 100000,
-        }
+        "TIMEOUT": None
     }
 }
 
@@ -76,9 +92,9 @@ STATICFILES_FINDERS = (
 SECRET_KEY = "c9j1v$z(t#-(_%i38wu@(n+&amp;^w6ki@$c!k0b80ts8=(@hb+*ln"
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    "django.template.loaders.app_directories.Loader",
-)
+# TEMPLATE_LOADERS = (
+#     "django.template.loaders.app_directories.Loader",
+# )
 
 MIDDLEWARE_CLASSES = (
     "django.middleware.common.CommonMiddleware",
@@ -89,7 +105,7 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 )
 
-ROOT_URLCONF = "urls"
+ROOT_URLCONF = "webapp.urls"
 
 # Python dotted path to the WSGI application used by Django"s runserver.
 WSGI_APPLICATION = "wsgi.application"
@@ -101,7 +117,7 @@ INSTALLED_APPS = (
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "cbmonitor",
+    "webapp.cbmonitor",
 )
 
 LOGGING = {
@@ -121,7 +137,7 @@ LOGGING = {
         },
         "null": {
             "level": "DEBUG",
-            "class": "django.utils.log.NullHandler",
+            "class": "logging.NullHandler",
         },
         "request_handler": {
             "level": "INFO",

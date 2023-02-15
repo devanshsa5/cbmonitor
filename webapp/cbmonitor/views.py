@@ -7,14 +7,14 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.views.decorators.cache import cache_page
 
-from cbmonitor import forms
-from cbmonitor import models
-from cbmonitor.plotter import Plotter
+from webapp.cbmonitor import forms
+from webapp.cbmonitor import models
+from webapp.cbmonitor.plotter import Plotter
 
 logger = logging.getLogger(__name__)
 
 
-@cache_page()
+@cache_page(60 * 5)
 def html_report(request):
     """Static HTML reports with PNG charts"""
     try:

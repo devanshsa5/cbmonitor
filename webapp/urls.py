@@ -1,10 +1,11 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import RedirectView
+from django.views.static import serve
 
-from cbmonitor import views
+from webapp.cbmonitor import views
 
 
 @csrf_exempt
@@ -29,16 +30,14 @@ def restful_dispatcher(request, path):
         return HttpResponse(content="Wrong path: {}".format(path), status=404)
 
 
-urlpatterns = patterns(
-    "",
+urlpatterns = [
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/favicon.ico")),
-    url(r"^reports/html/", "cbmonitor.views.html_report"),
+    url(r"^reports/html/", views.html_report),
     url(r"^cbmonitor/(?P<path>[a-z_]+)/$", restful_dispatcher),
-)
+]
 
 if settings.DEBUG:
-    urlpatterns += patterns(
-        "",
-        (r"^media/(?P<path>.*)$", "django.views.static.serve",
+    urlpatterns += [
+        url(r"^media/(?P<path>.*)$", serve,
          {"document_root": settings.MEDIA_ROOT})
-    )
+    ]

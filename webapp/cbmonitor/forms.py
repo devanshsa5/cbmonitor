@@ -2,12 +2,13 @@ from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
 
-from cbmonitor import models
+from webapp.cbmonitor import models
 
 
 class AddClusterForm(forms.ModelForm):
     class Meta:
         model = models.Cluster
+        fields = '__all__'
 
     def clean(self):
         cleaned_data = super(AddClusterForm, self).clean()
@@ -18,16 +19,19 @@ class AddClusterForm(forms.ModelForm):
 class AddServerForm(forms.ModelForm):
     class Meta:
         model = models.Server
+        fields = '__all__'
 
 
 class AddBucketForm(forms.ModelForm):
     class Meta:
         model = models.Bucket
+        fields = '__all__'
 
 
 class AddIndexForm(forms.ModelForm):
     class Meta:
         model = models.Index
+        fields = '__all__'
 
 
 class GetServersForm(forms.ModelForm):
@@ -145,3 +149,4 @@ class AddMetric(forms.ModelForm):
 class AddSnapshot(forms.ModelForm):
     class Meta:
         model = models.Snapshot
+        fields = '__all__'

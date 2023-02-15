@@ -9,12 +9,16 @@ flake8:
 	env/bin/flake8 webapp
 
 run:
-	env/bin/python webapp/manage.py syncdb
+	env/bin/python webapp/manage.py makemigrations
+	env/bin/python webapp/manage.py migrate
+	env/bin/python webapp/manage.py migrate --run-syncdb
 	env/bin/python webapp/manage.py runserver 0.0.0.0:8000
 
 runfcgi:
 	kill `cat /tmp/cbmonitor.pid` || true
-	env/bin/python webapp/manage.py syncdb --noinput
+	env/bin/python webapp/manage.py makemigrations
+	env/bin/python webapp/manage.py migrate
+	env/bin/python webapp/manage.py migrate --run-syncdb
 	env/bin/python webapp/manage.py runfcgi \
 		method=prefork \
 		maxchildren=8 \
