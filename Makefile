@@ -1,5 +1,5 @@
 build:
-	virtualenv -p python3 env
+	virtualenv -p python3.7 env
 	env/bin/pip install --cache-dir /tmp/pip -r requirements.txt
 
 clean:
