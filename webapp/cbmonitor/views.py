@@ -4,7 +4,7 @@ import logging
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
 from django.http import HttpResponse, Http404
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.views.decorators.cache import cache_page
 
 from webapp.cbmonitor import forms
@@ -35,7 +35,7 @@ def html_report(request):
     urls = [(id_from_url(url), title, url) for title, url in images]
 
     if urls:
-        return render_to_response("report.html", {"urls": urls})
+        return render(None,"report.html", {"urls": urls})
     else:
         return HttpResponse("No metrics found", status=400)
 
