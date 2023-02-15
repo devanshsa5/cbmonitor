@@ -34,7 +34,7 @@ def restful_dispatcher(request, path):
 urlpatterns = [
     path("favicon\.ico$", RedirectView.as_view(url="/static/favicon.ico")),
     path("reports/html/", views.html_report),
-    path("cbmonitor/<str:path>", restful_dispatcher),
+    path("cbmonitor/<str:path>/", restful_dispatcher),
 ]
 
 if settings.DEBUG:
