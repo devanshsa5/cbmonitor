@@ -5,7 +5,7 @@ DEBUG = True
 # TEMPLATE_DEBUG = DEBUG
 SETTINGS_PATH = path.dirname(path.dirname(__file__))
 
-ALLOWED_HOSTS = ("cbmonitor.sc.couchbase.com", "127.0.0.1", "172.23.98.70", "172.23.104.146")
+ALLOWED_HOSTS = ("cbmonitor.sc.couchbase.com", "127.0.0.1", "172.23.98.70", "172.23.104.146","172.23.105.37")
 
 INTERNAL_IPS = ("127.0.0.1",)
 TEMPLATES = [
