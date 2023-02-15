@@ -1,4 +1,5 @@
-from django.conf.urls import url
+from django.conf.urls import url 
+from django.urls import include, re_path, path
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -31,9 +32,9 @@ def restful_dispatcher(request, path):
 
 
 urlpatterns = [
-    url(r"^favicon\.ico$", RedirectView.as_view(url="/static/favicon.ico")),
-    url(r"^reports/html/", views.html_report),
-    url(r"^cbmonitor/(?P<path>[a-z_]+)/$", restful_dispatcher),
+    path("favicon\.ico$", RedirectView.as_view(url="/static/favicon.ico")),
+    path("reports/html/", views.html_report),
+    path("cbmonitor/<str:path>", restful_dispatcher),
 ]
 
 if settings.DEBUG:
