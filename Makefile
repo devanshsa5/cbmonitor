@@ -1,5 +1,5 @@
 build:
-	virtualenv -p python3.10 env
+	virtualenv -p python3 env
 	env/bin/pip install --cache-dir /tmp/pip -r requirements.txt
 
 clean:
