@@ -1194,7 +1194,7 @@ class Report(object):
 
         observables = []
 
-        for collector, metrics in self.METRICS.iteritems():
+        for collector, metrics in self.METRICS.items():
             # Cluster-wide metrics
             if collector in ("active_tasks",
                              "ns_server",
