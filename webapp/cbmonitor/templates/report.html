@@ -6,11 +6,15 @@
   </head>
   <body>
     <div class="text-center">
-      {% for id, title, url in urls %}
+      {% for id, title, url, chart in urls %}
         <h4 class="text-info chart-title">
           <a id="{{ id }}" href="#{{ id }}">{{ title }}</a>
         </h4>
-        <img src="{{ url }}" class="text-center">
+        <!-- <img src="{{ url }}" class="text-center"> -->
+        {% autoescape off %}
+        {{chart}}
+        {% endautoescape %}
+
         <hr>
       {% endfor %}
     </div>

@@ -1,6 +1,6 @@
 # Django settings for cbmonitor project.
 from os import path
-
+from pathlib import Path
 DEBUG = True
 # TEMPLATE_DEBUG = DEBUG
 SETTINGS_PATH = path.dirname(path.dirname(__file__))
@@ -69,17 +69,18 @@ MEDIA_ROOT = path.join(path.dirname(path.abspath(__file__)), "media")
 
 # URL that handles the media served from MEDIA_ROOT.
 MEDIA_URL = "/media/"
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Absolute path to the directory static files should be collected to.
 STATIC_ROOT = ""
 
 # URL prefix for static files.
 STATIC_URL = "/static/"
-
+STATIC_ROOT = path.join(BASE_DIR, "static/")
 # Additional locations of static files
-STATICFILES_DIRS = (
-    path.join(path.dirname(__file__), "cbmonitor/static"),
-)
+# STATICFILES_DIRS = (
+#     path.join(path.dirname(__file__), "cbmonitor/static"),
+# )
 
 # List of finder classes that know how to find static files in
 # various locations.

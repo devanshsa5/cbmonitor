@@ -11,22 +11,11 @@ flake8:
 run:
 	env/bin/python webapp/manage.py makemigrations
 	env/bin/python webapp/manage.py migrate
-	env/bin/python webapp/manage.py migrate --run-syncdb
 	env/bin/python webapp/manage.py runserver 0.0.0.0:8000
 
-runfcgi:
-	kill `cat /tmp/cbmonitor.pid` || true
+restart:
 	env/bin/python webapp/manage.py makemigrations
-	env/bin/python webapp/manage.py migrate
 	env/bin/python webapp/manage.py migrate --run-syncdb
-	env/bin/python webapp/manage.py runfcgi \
-		method=prefork \
-		maxchildren=8 \
-		minspare=2 \
-		maxspare=4 \
-		outlog=/tmp/cbmonitor.stdout.log \
-		errlog=/tmp/cbmonitor.stderr.log \
-		socket=/tmp/cbmonitor.sock \
-		pidfile=/tmp/cbmonitor.pid
 	chmod a+rw /tmp/cbmonitor.sock
+	systemctl restart emperor.uwsgi.service
 	nginx -s reload

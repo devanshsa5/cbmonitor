@@ -1,10 +1,11 @@
 import os
 from itertools import cycle
 from hashlib import md5
-
+os.environ['MPLCONFIGDIR'] = os.getcwd() + "/configs/"
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt, mpld3
+
 
 import numpy as np
 import pandas as pd
@@ -38,6 +39,24 @@ matplotlib.rcParams.update({
     'ytick.right': True,
 })
 
+def plot_interactive(filename, series, labels, colors, ylabel, chart, rebalances):
+    """Primary routine that serves as plot selector. The function and all
+    sub-functions are defined externally in order to be pickled."""
+    fig = plt.figure(figsize=(4.66, 2.625))
+    ax = init_ax(fig)
+
+    if chart in ("_lt90", "_gt80", "_histo"):
+        plot_percentiles(ax, series, labels, colors, ylabel, chart)
+    else:
+        plot_time_series(ax, series, labels, colors, ylabel)
+        highlight_rebalance(rebalances, colors)
+
+    legend = ax.legend()
+    legend.get_frame().set_linewidth(0.5)
+
+    fig.tight_layout()
+    plt.close()
+    return fig
 
 def plot_as_png(filename, series, labels, colors, ylabel, chart, rebalances):
     """Primary routine that serves as plot selector. The function and all
@@ -102,7 +121,7 @@ def plot_percentiles(ax, series, labels, colors, ylabel, chart):
     for s, label, color in zip(series, labels, colors):
         y = np.percentile(s, percentiles)
         ax.bar(x, y, linewidth=0.0, label=label,
-               width=width.next(), align=align.next(), color=color)
+               width=next(width), align=next(align), color=color)
 
 
 def highlight_rebalance(rebalances, colors):
@@ -200,7 +219,7 @@ class Palette:
         self.cycle = cycle(constants.PALETTE)
 
     def next(self):
-        return self.cycle.next()
+        return next(self.cycle)
 
 
 class DataClient:
@@ -299,16 +318,24 @@ class Plotter:
             for chart in generate_chart_types(metric):
                 url, filename = generate_paths(clusters=all_clusters,
                                                labels=custom_labels,
-                                               metric=md5(title + chart).hexdigest())
+                                               metric=md5((title + chart).encode()).hexdigest())
 
-                images.append([title, url])
-
-                if not os.path.exists(filename):  # Try cache
-                    plot_as_png(filename=filename,
+                
+                chart = plot_interactive(filename=filename,
                                 series=series,
                                 labels=labels,
                                 colors=colors,
                                 ylabel=ylabel,
                                 chart=chart,
                                 rebalances=rebalances)
+                images.append([title, url, chart])
+
+                # if not os.path.exists(filename):  # Try cache
+                #     plot_as_png(filename=filename,
+                #                 series=series,
+                #                 labels=labels,
+                #                 colors=colors,
+                #                 ylabel=ylabel,
+                #                 chart=chart,
+                #                 rebalances=rebalances)
         return images
