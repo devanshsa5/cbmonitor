@@ -5,18 +5,41 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.0/css/bootstrap.min.css">
   </head>
   <body>
-    <div class="text-center">
-      {% for id, title, url, chart in urls %}
-        <h4 class="text-info chart-title">
-          <a id="{{ id }}" href="#{{ id }}">{{ title }}</a>
-        </h4>
-        <!-- <img src="{{ url }}" class="text-center"> -->
-        {% autoescape off %}
-        {{chart}}
-        {% endautoescape %}
-
-        <hr>
+    <div class="text-center" style="width: 800px; height: 600px; margin: 0 auto; padding: 20px;">
+      <div class="filter-options">
+        <button class="filter-option" data-option="all">All</button>
+        <button class="filter-option" data-option="cluster">Per Cluster</button>
+        <button class="filter-option" data-option="bucket">Per Bucket</button>
+        <button class="filter-option" data-option="index">Per Index</button>
+        <button class="filter-option" data-option="server">Per Server</button>
+        <button class="filter-option" data-option="server-bucket">Per Server Per Bucket</button>
+      </div>
+    <div class="text-center" style="width: 800px; height: 600px; margin: 0 auto; padding: 20px;">
+      {% for id, title, url, chart, category in urls %}
+        <div class="filterable" data-option="all {{ category }}">
+          <h4 class="text-info chart-title">
+            <a id="{{ id }}" href="#{{ id }}">{{ title }}</a>
+          </h4>
+          <!-- <img src="{{ url }}" class="text-center"> -->
+          {{ chart|safe }}
+          <hr>
+        </div>
       {% endfor %}
     </div>
   </body>
+  <script src="https://mpld3.github.io/js/mpld3.v0.5.2.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.filter-option').click(function() {
+        var option = $(this).data('option');
+        $('.filterable').hide();
+        if (option === 'all') {
+          $('.filterable').show();
+        } else {
+          $('.filterable[data-option*="' + option + '"]').show();
+        }
+      });
+    });
+  </script>
 </html>

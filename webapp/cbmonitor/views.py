@@ -32,7 +32,7 @@ def html_report(request):
     def id_from_url(url):
         return url.split("/")[-1].split(".")[0]
 
-    urls = [(id_from_url(url), title, url, chart) for title, url, chart in images]
+    urls = [(id_from_url(url), title, url, chart, category) for title, url, chart, category in images]
 
     if urls:
         return render(None,"report.html", {"urls": urls})

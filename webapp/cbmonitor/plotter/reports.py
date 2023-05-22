@@ -4,7 +4,7 @@ from webapp.cbmonitor import models
 
 
 Observable = namedtuple(
-    "Observable", ["cluster", "server", "bucket", "index", "name", "collector"]
+    "Observable", ["cluster", "server", "bucket", "index", "name", "collector", "category"]
 )
 
 
@@ -1120,7 +1120,7 @@ class Report(object):
                                                       index__isnull=True):
 
                 observables[o.collector][o.name] = Observable(
-                    snapshot.cluster.name, "", "", "", o.name, o.collector
+                    snapshot.cluster.name, "", "", "", o.name, o.collector, "cluster"
                 )
             all_observables[""][""][snapshot.cluster] = observables
 
@@ -1134,7 +1134,7 @@ class Report(object):
                                                           server__isnull=True,
                                                           index__isnull=True):
                     observables[o.collector][o.name] = Observable(
-                        snapshot.cluster.name, "", bucket, "", o.name, o.collector
+                        snapshot.cluster.name, "", bucket, "", o.name, o.collector, "bucket"
                     )
                 all_observables[""][bucket][snapshot.cluster] = observables
 
@@ -1148,7 +1148,7 @@ class Report(object):
                                                           server__isnull=True,
                                                           index=_index):
                     observables[o.collector][o.name] = Observable(
-                        snapshot.cluster.name, "", "", index, o.name, o.collector
+                        snapshot.cluster.name, "", "", index, o.name, o.collector, "index"
                     )
                 all_observables[""][index][snapshot.cluster] = observables
 
@@ -1162,7 +1162,7 @@ class Report(object):
                                                           server=_server,
                                                           index__isnull=True):
                     observables[o.collector][o.name] = Observable(
-                        snapshot.cluster.name, server, "", "", o.name, o.collector
+                        snapshot.cluster.name, server, "", "", o.name, o.collector, "server"
                     )
                 all_observables[""][server][snapshot.cluster] = observables
 
@@ -1181,7 +1181,7 @@ class Report(object):
                                                               server=_server,
                                                               index__isnull=True):
                         observables[o.collector][o.name] = Observable(
-                            snapshot.cluster.name, server, bucket, "", o.name, o.collector
+                            snapshot.cluster.name, server, bucket, "", o.name, o.collector, "server-bucket"
                         )
                     all_observables[server][bucket][snapshot.cluster] = observables
 

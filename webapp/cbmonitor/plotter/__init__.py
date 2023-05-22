@@ -42,8 +42,8 @@ matplotlib.rcParams.update({
 def plot_interactive(filename, series, labels, colors, ylabel, chart, rebalances):
     """Primary routine that serves as plot selector. The function and all
     sub-functions are defined externally in order to be pickled."""
-    fig = plt.figure(figsize=(4.66, 2.625))
-    ax = init_ax(fig)
+    fig = plt.figure(figsize=(4.66, 2.625),  dpi=200)
+    ax = init_ax(fig)   
 
     if chart in ("_lt90", "_gt80", "_histo"):
         plot_percentiles(ax, series, labels, colors, ylabel, chart)
@@ -55,8 +55,12 @@ def plot_interactive(filename, series, labels, colors, ylabel, chart, rebalances
     legend.get_frame().set_linewidth(0.5)
 
     fig.tight_layout()
+    fig_html = mpld3.fig_to_html(fig)
+
+    # Save the HTML file to disk
+    with open(filename, 'w') as f:
+        f.write(fig_html)
     plt.close()
-    return fig
 
 def plot_as_png(filename, series, labels, colors, ylabel, chart, rebalances):
     """Primary routine that serves as plot selector. The function and all
@@ -70,7 +74,7 @@ def plot_as_png(filename, series, labels, colors, ylabel, chart, rebalances):
         plot_time_series(ax, series, labels, colors, ylabel)
         highlight_rebalance(rebalances, colors)
 
-    legend = ax.legend()
+    legend = ax.legend(fontsize=16)
     legend.get_frame().set_linewidth(0.5)
 
     fig.tight_layout()
@@ -88,12 +92,13 @@ def init_ax(fig, dim=(1, 1, 1)):
 def plot_time_series(ax, series, labels, colors, ylabel=None):
     """Simple time series plot or sub-plot."""
     if ylabel:
-        ax.set_ylabel(ylabel)
-    ax.set_xlabel("Time elapsed, sec")
+        ax.set_ylabel(ylabel, fontsize=15)
+    ax.set_xlabel("Time elapsed, sec", fontsize=15)
     for s, label, color in zip(series, labels, colors):
         ax.plot(s.index, s, label=label, color=color)
     ymin, ymax = ax.get_ylim()
-    plt.ylim(ymin=0, ymax=max(1, ymax * 1.05))
+    plt.ylim(bottom=0, ymax=max(1, ymax * 1.05))
+    plt.xlim(left=0)
 
 
 def plot_percentiles(ax, series, labels, colors, ylabel, chart):
@@ -321,14 +326,16 @@ class Plotter:
                                                metric=md5((title + chart).encode()).hexdigest())
 
                 
-                chart = plot_interactive(filename=filename,
+                plot_interactive(filename=filename,
                                 series=series,
                                 labels=labels,
                                 colors=colors,
                                 ylabel=ylabel,
                                 chart=chart,
                                 rebalances=rebalances)
-                images.append([title, url, chart])
+                with open(filename, 'r') as f:
+                        chart = f.read()
+                images.append([title, url, chart, observables.category])
 
                 # if not os.path.exists(filename):  # Try cache
                 #     plot_as_png(filename=filename,
