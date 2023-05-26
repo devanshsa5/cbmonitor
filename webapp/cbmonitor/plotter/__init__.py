@@ -5,7 +5,8 @@ os.environ['MPLCONFIGDIR'] = os.getcwd() + "/configs/"
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt, mpld3
-
+import plotly.graph_objects as go
+import plotly.io as pio
 
 import numpy as np
 import pandas as pd
@@ -40,27 +41,48 @@ matplotlib.rcParams.update({
 })
 
 def plot_interactive(filename, series, labels, colors, ylabel, chart, rebalances):
-    """Primary routine that serves as plot selector. The function and all
-    sub-functions are defined externally in order to be pickled."""
-    fig = plt.figure(figsize=(4.66, 2.625),  dpi=200)
-    ax = init_ax(fig)   
+    fig = go.Figure()
 
     if chart in ("_lt90", "_gt80", "_histo"):
-        plot_percentiles(ax, series, labels, colors, ylabel, chart)
+        if chart == "_lt90":
+            percentiles = range(1, 90)
+            x_range = [0, 90]
+        elif chart == "_gt80":
+            percentiles = (80, 85, 90, 95, 97.5, 99, 99.9, 99.99, 99.999)
+            x_range = [0, len(percentiles)]
+        else:
+            percentiles = range(1, 100)
+            x_range = [0, 100]
+
+        x_values = list(percentiles)  # Convert to list for proper bar positioning
+        width = 0.6
+
+        for i, (s, label, color) in enumerate(zip(series, labels, colors)):
+            y_values = np.percentile(s, percentiles)
+            bar_x_values = [x + (i * width) for x in x_values]  # Adjust x position of bars
+            fig.add_trace(go.Bar(x=bar_x_values, y=y_values, name=label, width=width, marker_color=color))
     else:
-        plot_time_series(ax, series, labels, colors, ylabel)
-        highlight_rebalance(rebalances, colors)
+        for s, label, color in zip(series, labels, colors):
+            fig.add_trace(go.Scatter(x=s.index, y=s, name=label, line=dict(color=color)))
 
-    legend = ax.legend()
-    legend.get_frame().set_linewidth(0.5)
+    fig.update_layout(
+        showlegend=True,
+        legend=dict(x=0, y=1),
+        xaxis=dict(title_text="Time elapsed, sec"),
+        yaxis=dict(title_text=ylabel, range=[0, max(s.max() for s in series) * 1.05]),
+        height = 500
+    )
+    if rebalances:
+        for (start, end), color in zip(rebalances, colors):
+            fig.add_shape(type="rect", x0=start, x1=end, y0=0, y1=1, fillcolor=color, opacity=0.1, line=dict(width=0))
 
-    fig.tight_layout()
-    fig_html = mpld3.fig_to_html(fig)
+    fig_html = pio.to_html(fig, full_html=False)
 
-    # Save the HTML file to disk
     with open(filename, 'w') as f:
         f.write(fig_html)
-    plt.close()
+
+
+
 
 def plot_as_png(filename, series, labels, colors, ylabel, chart, rebalances):
     """Primary routine that serves as plot selector. The function and all
@@ -92,13 +114,12 @@ def init_ax(fig, dim=(1, 1, 1)):
 def plot_time_series(ax, series, labels, colors, ylabel=None):
     """Simple time series plot or sub-plot."""
     if ylabel:
-        ax.set_ylabel(ylabel, fontsize=15)
-    ax.set_xlabel("Time elapsed, sec", fontsize=15)
+        ax.set_ylabel(ylabel)
+    ax.set_xlabel("Time elapsed, sec")
     for s, label, color in zip(series, labels, colors):
         ax.plot(s.index, s, label=label, color=color)
     ymin, ymax = ax.get_ylim()
-    plt.ylim(bottom=0, ymax=max(1, ymax * 1.05))
-    plt.xlim(left=0)
+    plt.ylim(ymin=0, ymax=max(1, ymax * 1.05))
 
 
 def plot_percentiles(ax, series, labels, colors, ylabel, chart):
@@ -158,7 +179,7 @@ def generate_title(observable):
 def generate_paths(clusters, labels, metric):
     """Generate file name and URL using the unique attributes."""
     sub_folder = ''.join(clusters + labels)
-    filename = "{}.png".format(metric)
+    filename = "{}.html".format(metric)
     path = os.path.join(sub_folder, filename)
 
     if not os.path.exists(os.path.join(settings.MEDIA_ROOT, sub_folder)):
@@ -325,17 +346,18 @@ class Plotter:
                                                labels=custom_labels,
                                                metric=md5((title + chart).encode()).hexdigest())
 
-                
-                plot_interactive(filename=filename,
-                                series=series,
-                                labels=labels,
-                                colors=colors,
-                                ylabel=ylabel,
-                                chart=chart,
-                                rebalances=rebalances)
+                if not os.path.exists(filename):  # Try cache
+                    plot_interactive(filename=filename,
+                                    series=series,
+                                    labels=labels,
+                                    colors=colors,
+                                    ylabel=ylabel,
+                                    chart=chart,
+                                    rebalances=rebalances)
                 with open(filename, 'r') as f:
-                        chart = f.read()
-                images.append([title, url, chart, observables.category])
+                        _chart = f.read()
+
+                images.append([title, url, _chart, observables[0].category])
 
                 # if not os.path.exists(filename):  # Try cache
                 #     plot_as_png(filename=filename,

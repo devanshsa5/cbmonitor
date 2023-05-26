@@ -1,0 +1,26 @@
+.filter-options {
+    margin-bottom: 20px;
+  }
+  
+  .filter-option {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    color: #fff;
+    background-color: #28a745; /* Green button color */
+    cursor: pointer;
+  }
+  
+  .filter-option:hover {
+    background-color: #218838; /* Darker green color on hover */
+  }
+  
+  .filter-option[data-option="all"] {
+    background-color: #333; /* Custom color for "All" button */
+  }
+  
+  .filter-option[data-option="all"]:hover {
+    background-color: #222; /* Darker color for "All" button on hover */
+  }
+  

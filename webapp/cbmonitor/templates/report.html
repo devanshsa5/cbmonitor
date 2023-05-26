@@ -3,9 +3,10 @@
   <head>
     <title>cbmonitor</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="webapp/cbmonitor/templates/report.css">
   </head>
   <body>
-    <div class="text-center" style="width: 800px; height: 600px; margin: 0 auto; padding: 20px;">
+    <div class="text-center" style="width: 800px; margin: 0 auto; padding: 20px;">
       <div class="filter-options">
         <button class="filter-option" data-option="all">All</button>
         <button class="filter-option" data-option="cluster">Per Cluster</button>
@@ -14,6 +15,7 @@
         <button class="filter-option" data-option="server">Per Server</button>
         <button class="filter-option" data-option="server-bucket">Per Server Per Bucket</button>
       </div>
+    </div>
     <div class="text-center" style="width: 800px; height: 600px; margin: 0 auto; padding: 20px;">
       {% for id, title, url, chart, category in urls %}
         <div class="filterable" data-option="all {{ category }}">
@@ -33,12 +35,19 @@
     $(document).ready(function() {
       $('.filter-option').click(function() {
         var option = $(this).data('option');
+        console.log(option);
         $('.filterable').hide();
         if (option === 'all') {
           $('.filterable').show();
         } else {
-          $('.filterable[data-option*="' + option + '"]').show();
+      $('.filterable[data-option]').each(function() {
+        var dataOption = $(this).data('option');
+        var options = dataOption.split(' '); // Split the data-option value into a list of options
+        if (options.includes(option)) {
+          $(this).show();
         }
+      });
+    }
       });
     });
   </script>
