@@ -224,8 +224,15 @@ LABELS = {
     "BlockCacheBlockSize": "Block size, bytes",
     "NMemoryOptimisedCommitBatches": "Number of commit batches written in memory optimised mode",
     "TotalDiskUsage": "Uncompressed disk size of all versions of the LSM Trees",
+    "HistoryDiskUsage": "Total physical size of all files part of history",
+    "HistoryDataSize": "Part of the history that is not fragmented/overwritten",
     "NonResidentBloomFilterSize": "Memory reclaimed by evicting bloom filters",
     "RecentBloomFilterCacheHitRatio": "Bloom filter cache hit ratio",
+    "CheckpointOverhead": "Overhead of persistent snapshots compared to actual disk usage",
+    "ActiveDataSize": "Normalize logical data size based on max size on disk",
+    "ActiveDiskUsage": "Uncompressed disk size of latest version of the LSM Trees",
+    "CheckpointOverheadKeyIndex": "Overhead of KeyIndex",
+    "CheckpointOverheadSeqIndex": "Overhead of SeqIndex",
 
     "ep_mem_used_primary": "Memory used, bytes",
 
@@ -761,6 +768,7 @@ LABELS = {
     "utilization:memoryBytes": "Utilisation Memory Percentage by FTS",
     "kv_ep_total_enqueued_rate": "Mutations enqueued per sec in checkpoints",
     "kv_ep_total_deduplicated_rate": "Mutations deduplicated per sec in checkpoints",
+    "kv_ep_total_deduplicated_flusher_rate": "Mutations deduplicated per sec in flushers"
 }
 
 HISTOGRAMS = (
@@ -949,8 +957,15 @@ NON_ZERO_VALUES = (
     "BlockCacheBlockSize",
     "NMemoryOptimisedCommitBatches",
     "TotalDiskUsage",
+    "HistoryDiskUsage",
+    "HistoryDataSize",
     "NonResidentBloomFilterSize",
     "RecentBloomFilterCacheHitRatio",
+    "CheckpointOverhead",
+    "ActiveDataSize",
+    "ActiveDiskUsage",
+    "CheckpointOverheadKeyIndex",
+    "CheckpointOverheadSeqIndex",
 
     "ep_mem_used_primary",
 

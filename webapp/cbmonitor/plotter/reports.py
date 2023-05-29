@@ -133,8 +133,15 @@ class Report(object):
             "BlockCacheBlockSize",
             "NMemoryOptimisedCommitBatches",
             "TotalDiskUsage",
+            "HistoryDiskUsage",
+            "HistoryDataSize",
             "NonResidentBloomFilterSize",
             "RecentBloomFilterCacheHitRatio",
+            "CheckpointOverhead",
+            "ActiveDataSize",
+            "ActiveDiskUsage",
+            "CheckpointOverheadKeyIndex",
+            "CheckpointOverheadSeqIndex",
         ]),
         ("cbstats_memory", [
             "ep_mem_used_primary",
@@ -1054,6 +1061,7 @@ class Report(object):
         ("metrics_rest_api_dedup", [
             "kv_ep_total_enqueued_rate",
             "kv_ep_total_deduplicated_rate",
+            "kv_ep_total_deduplicated_flusher_rate"
         ])
     ))
 
